@@ -1,0 +1,64 @@
+<div fxLayout="column" fxFlex [class.dark-theme]="isDarkTheme">
+
+  <md-toolbar color="primary">
+    <button md-icon-button (click)="nav.toggle()">
+        <md-icon class="md-24">menu</md-icon>
+      </button>
+    <span>UCLA</span>
+
+    <!-- Filler that pushes the menu button to the end of the toolbar -->
+    <span fxFlex></span>
+
+    <button md-icon-button [mdMenuTriggerFor]="themeMenu">
+      <md-icon>more_vert</md-icon>
+    </button>
+  </md-toolbar>
+
+  <md-sidenav-container fxFlex>
+    <md-sidenav #nav mode="side">
+      <md-nav-list>
+        <md-list-item *ngFor="let user of users" (click)="selectedUser = user">
+          <md-icon svgIcon="avatars:{{user.avatar}}" class="avatar"></md-icon>
+          <span>{{user.name}}</span>
+        </md-list-item>
+      </md-nav-list>
+    </md-sidenav>
+    <div class="content" fxLayout="column" fxLayoutGap="16px">
+      <md-card>
+            <h2>Events</h2>
+        <md-card-content>
+          <div class="button-row" fxLayoutAlign="end center">
+            <button md-button color="accent" (click)="resetFilters()">Reset Filters</button>
+          </div>
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
+            <div *ngFor="let fieldOption of fieldOptions" class="event-filter" fxFlex.xs="100" fxFlex.md="25" fxFlex.sm="50">
+              <md-select
+                fxFlex.xs="97"
+                fxFlex.lg="97"
+                fxLayoutAlign="stretch"
+                placeholder="{{fieldOption.displayField}}" value={{fieldOption.options[0].value}}
+                [(ngModel)]="filters[fieldOption.field]">
+                <md-option *ngFor="let option of fieldOption.options" [value]="option.value">
+                  {{ option.viewValue }}
+                </md-option>
+              </md-select>
+            </div>
+          </div>
+          <div class="button-row" fxLayoutAlign="center">
+            <button md-raised-button color="primary" (click)="searchEvents()">Search</button>
+          </div>
+        </md-card-content>
+      </md-card>
+
+      <md-card *ngIf="events" fxLayout="column">
+
+          <event-detail *ngFor="let event of events" [event]="event"></event-detail>
+
+      </md-card>
+    </div>
+  </md-sidenav-container>
+
+  <md-menu #themeMenu x-position="before">
+    <button md-menu-item (click)="isDarkTheme = !isDarkTheme">Toggle Theme</button>
+  </md-menu>
+</div>
